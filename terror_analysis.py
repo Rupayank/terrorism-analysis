@@ -56,6 +56,13 @@ def load_data():
   global year_dict
   year_dict = {str(year): str(year) for year in year_list}
 
+  option={
+      'Yes':'lapse_yes',
+      'No':'lapse_no'
+  }
+  global lapse_list
+  lapse_list=[{"label":key, "value":values} for key,values in option.items()]
+
   chart_values={"Terrorist Organisation":'gname', 
                              "Target Nationality":'natlty1_txt', 
                              "Target Type":'targtype1_txt', 
@@ -122,11 +129,14 @@ def create_app_ui():
         dash.dependencies.Input('attacktype-dropdown', 'value'),
         dash.dependencies.Input('year-slider', 'value'), 
         dash.dependencies.Input("Tabs", "value"),
-        dash.dependencies.Input("subtabs", "value")
+        dash.dependencies.Input("subtabs", "value"),
+        dash.dependencies.Input('time-lapse','value')
     ]
 )
-def update_map(month_value, date_value,region_value,country_value,state_value,city_value,attack_value,year_value,tab, subtabs):
+def update_map(month_value, date_value,region_value,country_value,state_value,city_value,attack_value,year_value,tab, subtabs,lapse):
     map_figure=None
+    print('Time lapse: ',lapse)
+
     print("Data Type of month value = " , str(type(month_value)))
     print("Data of month value = " , month_value)
     
@@ -206,23 +216,39 @@ def update_map(month_value, date_value,region_value,country_value,state_value,ci
             
             new_df.loc[0] = [0, 0 ,0, None, None, None, None, None, None, None, None]
     
+        if lapse=='lapse_no':
+            map_figure = px.scatter_mapbox(new_df,
+                            lat="latitude", 
+                            lon="longitude",
+                            height=600,
+                            color="attacktype1_txt",
+                            hover_name="city", 
+                            hover_data=["region_txt", "country_txt", "provstate","city", "attacktype1_txt","nkill","iyear","imonth", "iday"],
+                            zoom=1.3
+                            )                       
+            map_figure.update_layout(mapbox_style="open-street-map",
+                        autosize=True,
+                        margin=dict(l=50, r=50, t=0, b=0),
+                        )
+            return dcc.Graph(figure=map_figure)
         
-        map_figure = px.scatter_mapbox(new_df,
-                        lat="latitude", 
-                        lon="longitude",
-                        height=600,
-                        color="attacktype1_txt",
-                        animation_frame='iyear',
-                        animation_group=new_df['city'],
-                        hover_name="city", 
-                        hover_data=["region_txt", "country_txt", "provstate","city", "attacktype1_txt","nkill","iyear","imonth", "iday"],
-                        zoom=1.3
-                        )                       
-        map_figure.update_layout(mapbox_style="open-street-map",
-                    autosize=True,
-                    margin=dict(l=50, r=50, t=0, b=0),
-                    )
-        return dcc.Graph(figure=map_figure)
+        elif lapse=='lapse_yes':
+            map_figure = px.scatter_mapbox(new_df,
+                            lat="latitude", 
+                            lon="longitude",
+                            height=600,
+                            color="attacktype1_txt",
+                            animation_frame='iyear',
+                            animation_group=new_df['city'],
+                            hover_name="city", 
+                            hover_data=["region_txt", "country_txt", "provstate","city", "attacktype1_txt","nkill","iyear","imonth", "iday"],
+                            zoom=1.3
+                            )                       
+            map_figure.update_layout(mapbox_style="open-street-map",
+                        autosize=True,
+                        margin=dict(l=50, r=50, t=0, b=0),
+                        )
+            return dcc.Graph(figure=map_figure)
     else: 
         return None
 
@@ -366,6 +392,16 @@ def update_data(tab):
                     )
                 ]),
                 html.Br(),
+                html.H5('Timelapse:', id='lapse-option',className='d-inline ml-5 p-2 bg-warning text-white'),
+                html.Div(className='row ml-3',children=[
+                    html.Div(className='form-group mt-4 col-2',children=[
+                        dcc.Dropdown(
+                            id='time-lapse',
+                            options=lapse_list,
+                            placeholder='Time lapse'
+                        )
+                    ])
+                ]),
                 html.Div(id='graph-object', children = ["World Map is loading"])
         ])
 
@@ -432,7 +468,8 @@ def update_date(month):
                Output("country-dropdown", "value"),
                Output("country-dropdown", "disabled"),
                Output("state-dropdown", "value"),
-               Output("city-dropdown", "value")],
+               Output("city-dropdown", "value"),
+               Output("time-lapse","value")],
               [Input("subtabs", "value")])
 def update_r(tab):
     region = None
@@ -441,6 +478,7 @@ def update_r(tab):
     disabled_c = False
     state=None
     city=None
+    lapse='lapse_no'
     if tab == "worldMap":
         pass
     elif tab=="indiaMap":
@@ -448,7 +486,7 @@ def update_r(tab):
         disabled_r = True
         country = ["India"]
         disabled_c = True
-    return region, disabled_r, country, disabled_c,state,city
+    return region, disabled_r, country, disabled_c,state,city,lapse
 
 #Country dropdown list
 @app.callback(
