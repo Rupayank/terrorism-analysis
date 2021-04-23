@@ -1,7 +1,7 @@
 # Overview
 This web application is basically a predictive analysis tool. It uses "global terrorism database"(GTD) which is a dataset of nearly 1,90,000 records maintained by the "National Consortium for the study of terrorism and Responses to terrorism" (START).
 # Requirements
-For the terror_analysis.py to run properly the databse is required to be download & saved in the same workspace as the source code [link](https://www.start.umd.edu/gtd/access/)
+For the terror_analysis.py to run properly the databse is required to be downloaded from the [link](https://www.start.umd.edu/gtd/access/) & saved in the same workspace as the source code. 
 
 This application has been made using python data visualisation library -Dash hence ensure dash is installed in the local machine
 # Features
@@ -12,3 +12,4 @@ This application has been made using python data visualisation library -Dash hen
 5. There is also an option to run a time lapse between the range of year selected.
 # Conclusion
 Since military resources of countries are almost uniformly distributed and are less in numbers, it would be of help for them in the allocation of suitable military resources at places of interest using this analysis tool.
+Working application is deployed in [link](https://terrorism-trend-analysis.herokuapp.com/).
