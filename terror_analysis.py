@@ -541,7 +541,7 @@ def main():
   
   global app
   app.layout = create_app_ui()
-  app.title = "Forsk Terrorism Analysis"
+  app.title = "Terrorism Analysis"
   app.run_server()
 
   print("\nApplication closed.............")
