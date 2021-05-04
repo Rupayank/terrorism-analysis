@@ -1,3 +1,4 @@
+Application is deployed in [link](https://terrorism-trend-analysis.herokuapp.com/).
 # Overview
 This web application is basically a predictive analysis tool. It uses "global terrorism database"(GTD) which is a dataset of nearly 1,90,000 records maintained by the "National Consortium for the study of terrorism and Responses to terrorism" (START).
 # Requirements
@@ -12,4 +13,3 @@ This application has been made using python data visualisation library -Dash hen
 5. There is also an option to run a time lapse between the range of year selected.
 # Conclusion
 Since military resources of countries are almost uniformly distributed and are less in numbers, it would be of help for them in the allocation of suitable military resources at places of interest using this analysis tool.
-Working application is deployed in [link](https://terrorism-trend-analysis.herokuapp.com/).
